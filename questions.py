@@ -224,7 +224,14 @@ def UneDosListas(sentences, dEmpatadas, query):
     """
     dictEmpates = dict()
     for oracion in dEmpatadas.keys():
-        dictEmpates[oracion] = len(set(query).intersection(set(nltk.word_tokenize(oracion.lower())))) / len(nltk.word_tokenize(oracion.lower()))
+        # I think that the next line is the one that was missing        
+        token_oracion = tokenize(oracion)
+        # now, i realize that your comments 
+        # "Your code does not handle all tokenization correctly, ...",
+        # are right.
+        # If there is another mistake, please give a Major hint
+        # Thanks in advance
+        dictEmpates[oracion] = len(set(query).intersection(set(token_oracion))) / len(token_oracion)
     dict_Ordered3 = dict(sorted(dictEmpates.items(), key=lambda item: item[1], reverse=True))
     listaOrdenada3 = list(dict_Ordered3.keys())
     if len(sentences) == 0:
