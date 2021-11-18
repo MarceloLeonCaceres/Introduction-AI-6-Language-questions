@@ -12,13 +12,13 @@ SENTENCE_MATCHES = 1
 def main():
 
     # Check command-line arguments
-    if len(sys.argv) != 2:
-        sys.exit("Usage: python questions.py corpus")
+    # if len(sys.argv) != 2:
+    #     sys.exit("Usage: python questions.py corpus")
 
     # Calculate IDF values across files
     
-    files = load_files(sys.argv[1])
-    # files = load_files('corpus')
+    # files = load_files(sys.argv[1])
+    files = load_files('corpus')
     # print(files.keys())
     file_words = {
         filename: tokenize(files[filename])
@@ -82,7 +82,7 @@ def tokenize(document):
 
     lista = []
     for palabra in nltk.word_tokenize(document.lower()):
-        if palabra not in string.punctuation and palabra not in stopWords:
+        if (not all(caracteres in string.punctuation for caracteres in palabra)) and (palabra not in stopWords):
             lista.append(palabra.lower())    
     return lista
     # raise NotImplementedError
@@ -118,25 +118,7 @@ def top_files(query, files, idfs, n):
     files to a list of their words), and `idfs` (a dictionary mapping words
     to their IDF values), return a list of the filenames of the the `n` top
     files that match the query, ranked according to tf-idf.
-    """
-    # listaPalabras = []
-    # for palabra in query:
-    #     if palabra in idfs:
-    #         if idfs[palabra] > 0.0:
-    #             listaPalabras.append(palabra)
-    #             # print(f"palabra:  {palabra}     idf: {idfs[palabra]}")
-    
-    # tf = dict()
-    # for file in files.keys():
-    #     frequencies = dict()
-    #     for word in files[file]: 
-    #         if word in listaPalabras:
-    #             if word not in frequencies:
-    #                 frequencies[word] = 1
-    #             else:
-    #                 frequencies[word] += 1
-    #     tf[file] = frequencies
-    # print(tf)   
+    """     
 
     tf_idf = dict()
     for file in files.keys():
@@ -177,54 +159,7 @@ def top_sentences(query, sentences, idfs, n):
 
     listaOrdenada1 = sorted(valorOraciones, key=lambda val: (val[1], val[2]), reverse=True)    
     
-    # This part joined the elements of the dictionary with different
-    # values, with elements of the dict with the same value in the
-    # first criteria, but keeping the desired sort.
-    # The final result is the required, in both cases.
-    # while len(listaDefinitiva) < n:
-    #     actual = dict_Ordered[listaOrdenada1[i]]
-    #     signte = dict_Ordered[listaOrdenada1[i+1]]
-    #     listaTemporal[listaOrdenada1[i]] = actual
-    #     while signte == actual:
-    #         listaTemporal[listaOrdenada1[i+1]] = signte
-    #         i+=1
-    #         actual = dict_Ordered[listaOrdenada1[i]]
-    #         signte = dict_Ordered[listaOrdenada1[i+1]]
-    #     listaDefinitiva = UneDosListas(listaDefinitiva, listaTemporal, query)
-    #     listaTemporal.clear()
-    #     i+=1
-    return [item[0] for item in listaOrdenada1[:n]]     
- 
-# This part calculated and sorted the elements of the
-# list that have the same value in the first criteria.
-# Now this is avoided, because the sort is realized
-# in the same list, by 2 criteria, and using
-# lists instead of dictionaries.
-# But the result is the same.
-# def UneDosListas(sentences, dEmpatadas, query):
-#     """
-#     Une dos listas de oraciones, 
-#     sentences es la lista ordenada previamente, y
-#     dEmpatadas es el diccionario de oraciones que se debe
-#     desempatar con el higher query term density
-#     """
-#     dictEmpates = dict()
-#     for oracion in dEmpatadas.keys():
-#         # I think that the next line is the one that was missing        
-#         token_oracion = tokenize(oracion)
-#         # now, i realize that your comments 
-#         # "Your code does not handle all tokenization correctly, ...",
-#         # are right.
-#         # If there is another mistake, please give a Major hint
-#         # Thanks in advance
-#         dictEmpates[oracion] = len(set(query).intersection(set(token_oracion))) / len(token_oracion)
-#     dict_Ordered3 = dict(sorted(dictEmpates.items(), key=lambda item: item[1], reverse=True))
-#     listaOrdenada3 = list(dict_Ordered3.keys())
-#     if len(sentences) == 0:
-#         return listaOrdenada3
-#     else:
-#         sentences.extend(listaOrdenada3) 
-#     return sentences
+    return [item[0] for item in listaOrdenada1[:n]]
 
 if __name__ == "__main__":
     main()
